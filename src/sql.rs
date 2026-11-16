@@ -19,6 +19,7 @@ struct Node {
 
 // Pull all on-screen nodes and return them as a BTreeMap
 pub fn load_nodes(window_id: Id, x: i64, y: i64) {
+  let connection = sqlite::open("./data.db").unwrap();
   let mut node_map = BTreeMap::new();
   let query = "SELECT * FROM nodes WHERE ? < node_x < ?, ? < node_y < ?";
   x + size(window_id.x);
