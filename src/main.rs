@@ -1,7 +1,9 @@
 mod color_picker;
 mod thought_bubble;
+mod sql;
 
 use iced_aw::ICED_AW_FONT_BYTES;
+use iced::window::latest as latest;
 
 #[derive(Default)]
 struct App {
@@ -24,6 +26,7 @@ impl App {
     }
 
     fn view(&self) -> iced::Element<'_, Message> {
+        sql::load_nodes(latest());
         iced::widget::column![
             self.color_picker.view().map(Message::ColorPicker),
             self.bubble.view().map(Message::Bubble),
@@ -33,6 +36,7 @@ impl App {
 }
 
 pub fn main() -> iced::Result {
+    sql::create_tables();
     iced::application(App::default, App::update, App::view)
         .font(ICED_AW_FONT_BYTES)
         .run()
