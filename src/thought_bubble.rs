@@ -3,8 +3,8 @@ use iced::advanced::renderer;
 use iced::advanced::widget::{self, Widget};
 use iced::border;
 use iced::mouse;
-use iced::{Color, Center, Element, Length, Rectangle, Size};
-use iced::widget::{center, column, slider, text};
+use iced::{Fill, Color, Center, Element, Length, Rectangle, Size};
+use iced::widget::{pin, column, text};
 
 pub struct Circle {
     radius: f32,
@@ -93,18 +93,16 @@ impl Bubble {
         }
     }
 
-    pub fn view(&self) -> Element<'_, Message> {
+    pub fn view(&self, x: i64, y: i64) -> Element<'_, Message> {
         let content = column![
             circle(self.radius),
-            text!("Radius: {:.2}", self.radius),
-            slider(1.0..=100.0, self.radius, Message::RadiusChanged).step(0.01_f32),
         ]
         .padding(20)
         .spacing(20)
         .max_width(500)
         .align_x(Center);
 
-        center(content).into()
+        pin(content).x(x).y(y)
     }
 }
 
