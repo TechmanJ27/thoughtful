@@ -3,21 +3,22 @@ use iced::advanced::renderer;
 use iced::advanced::widget::{self, Widget};
 use iced::border;
 use iced::mouse;
-use iced::{Color, Center, Element, Length, Rectangle, Size};
-use iced::widget::{center, column, slider, text};
+use iced::{Fill, Color, Center, Element, Length, Rectangle, Size};
+use iced::widget::{pin, column, text};
 
 pub struct Circle {
-    radius: f32,
+    height: f32,
+    width: f32
 }
 
 impl Circle {
-    pub fn new(radius: f32) -> Self {
-        Self { radius }
+    pub fn new(height: f32, width: f32) -> Self {
+        Self { height, width }
     }
 }
 
-pub fn circle(radius: f32) -> Circle {
-    Circle::new(radius)
+pub fn circle(height: f32, width: f32) -> Circle {
+    Circle::new(height, width)
 }
 
 impl<Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Circle
@@ -37,7 +38,7 @@ where
         _renderer: &Renderer,
         _limits: &layout::Limits,
     ) -> layout::Node {
-        layout::Node::new(Size::new(self.radius * 2.0, self.radius * 2.0))
+        layout::Node::new(Size::new(self.width, self.height))
     }
 
     fn draw(
@@ -53,10 +54,10 @@ where
         renderer.fill_quad(
             renderer::Quad {
                 bounds: layout.bounds(),
-                border: border::rounded(self.radius),
+                border: border::rounded(radius::new()).color(Color::BLACK),
                 ..renderer::Quad::default()
             },
-            Color::BLACK,
+            Color::WHITE,
         );
     }
 }
@@ -72,39 +73,42 @@ where
 }
 
 pub struct Bubble {
-    radius: f32,
+    height: f32,
+    width: f32
 }
 
 #[derive(Debug, Clone, Copy)]
 pub enum Message {
-    RadiusChanged(f32),
+    WidthChanged(f32),
+    HeightChanged(f32),
 }
 
 impl Bubble {
     fn new() -> Self {
-        Bubble { radius: 50.0 }
+        Bubble { height: 50.0, width: 50.0 }
     }
 
     pub fn update(&mut self, message: Message) {
         match message {
-            Message::RadiusChanged(radius) => {
-                self.radius = radius;
+            Message::WidthChanged(width) => {
+                self.width = width;
+            }
+            Message::HeightChanged(height) => {
+                self.height = height;
             }
         }
     }
 
-    pub fn view(&self) -> Element<'_, Message> {
+    pub fn view(&self, x: i64, y: i64) -> Element<'_, Message> {
         let content = column![
-            circle(self.radius),
-            text!("Radius: {:.2}", self.radius),
-            slider(1.0..=100.0, self.radius, Message::RadiusChanged).step(0.01_f32),
+            circle(self.height, self.width),
         ]
         .padding(20)
         .spacing(20)
         .max_width(500)
         .align_x(Center);
 
-        center(content).into()
+        pin(content).x(x).y(y)
     }
 }
 
