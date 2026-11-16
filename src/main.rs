@@ -36,6 +36,7 @@ impl App {
 
 pub fn main() -> iced::Result {
     sql::create_tables();
+    sql::test_nodes();
     let mut x = 0;
     let mut y = 0;
     iced::application(App::default, App::update, App::view(x, y))
