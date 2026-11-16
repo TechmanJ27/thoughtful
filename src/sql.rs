@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 pub fn create_tables() {
   let connection = sqlite::open("./data.db").unwrap();
   let query = "
-      CREATE TABLE IF NOT EXISTS nodes (node_id INT, node_text TEXT, node_color INT, node_x INT, node_y INT, 
+      CREATE TABLE IF NOT EXISTS nodes (node_id INT, node_text TEXT, node_color INT, node_x INT, node_y INT), 
   ";
   connection.execute(query).unwrap();
 }
@@ -39,4 +39,15 @@ pub fn load_nodes(window: Window, x: i64, y: i64) {
     node_map.insert(node_id, node);
   }
   node_map
+}
+
+// Test nodes
+pub fn test_nodes() {
+  let connection = sqlite::open("./data.db").unwrap();
+  let query = "
+    INSERT INTO nodes (1, text, 0000000, 10, 10), 
+    INSERT INTO nodes (1, text, 0000000, 70, 89), 
+    INSERT INTO nodes (1, text, 0000000, 105, 299), 
+  ";
+  connection.execute(query).unwrap();
 }
