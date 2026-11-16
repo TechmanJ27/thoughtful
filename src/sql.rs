@@ -39,4 +39,5 @@ pub fn load_nodes(window_id: Id, x: i64, y: i64) {
     };
     node_map.insert(node_id, node);
   }
+  node_map
 }
